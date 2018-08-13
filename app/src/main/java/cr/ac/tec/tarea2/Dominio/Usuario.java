@@ -1,12 +1,19 @@
 package cr.ac.tec.tarea2.Dominio;
 
-public class Usuario {
+import android.content.ContentValues;
+import android.database.Cursor;
+
+public class Usuario implements Almacenable{
 
     String Nombre;
     String Alias;
     String Correo;
     String Password;
     int id;
+
+    public Usuario(){
+
+    }
 
     public Usuario(String nombre, String alias, String correo, String password, int id) {
         Nombre = nombre;
@@ -54,5 +61,27 @@ public class Usuario {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public ContentValues toStorage() {
+        ContentValues value = new ContentValues();
+        value.put("nombre", Nombre);
+        value.put("alias", Alias);
+        value.put("correo", Correo);
+        value.put("password", Password);
+        value.put("id", id);
+
+        return value;
+    }
+
+    @Override
+    public void fromStorage(Cursor datos) {
+        Nombre = datos.getString(0);
+        Alias = datos.getString(1);
+        Correo = datos.getString(2);
+        Password = datos.getString(3);
+        id = datos.getInt(4);
+
     }
 }
