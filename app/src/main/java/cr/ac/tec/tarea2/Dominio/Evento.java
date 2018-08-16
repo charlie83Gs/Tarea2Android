@@ -3,7 +3,12 @@ package cr.ac.tec.tarea2.Dominio;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Evento implements Almacenable{
     private Date fecha;
@@ -11,7 +16,7 @@ public class Evento implements Almacenable{
     private String descripcion;
     private int idUsuario;
     private int id;
-
+    private static DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
     public Evento(Date fecha, String titulo, String descripcion, int idUsuario, int idEvento) {
         this.fecha = fecha;
         this.titulo = titulo;
@@ -63,7 +68,7 @@ public class Evento implements Almacenable{
     @Override
     public ContentValues toStorage() {
         ContentValues value = new ContentValues();
-        value.put("fecha", fecha.toString());
+        value.put("fecha", df.format(fecha));
         value.put("titulo", titulo);
         value.put("descripcion", descripcion);
         value.put("idUsuario", idUsuario);
@@ -74,6 +79,14 @@ public class Evento implements Almacenable{
 
     @Override
     public void fromStorage(Cursor datos) {
-
+        try {
+            fecha = df.parse(datos.getString(0));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        titulo = datos.getString(1);
+        descripcion = datos.getString(2);
+        idUsuario = datos.getInt(3);
+        id = datos.getInt(4);
     }
 }
