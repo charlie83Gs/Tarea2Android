@@ -32,12 +32,14 @@ public class Almacenamiento<T extends Almacenable> {
         this.tableName = tableName;
         actualDB = db;
         datos = new ArrayList<T>();
+
+        cargarDatos();
     }
 
     public void cargarDatos(){
         //leemmos la tabla
         Cursor Dato =
-                actualDB.rawQuery("select * from" + tableName, null);
+                actualDB.rawQuery("select * from " + tableName, null);
         //vaciamos el array si hay datos viejos
         datos.clear();
 
@@ -64,14 +66,23 @@ public class Almacenamiento<T extends Almacenable> {
 
     public void agregarDato(T dato){
         datos.add(dato);
-        actualDB.insert(tableName,null,dato.toStorage())
+        actualDB.insert(tableName,null,dato.toStorage());
         guardarDatos();
 
+    }
+
+    public void updateElement(int id){
+        actualDB.update(tableName,datos.get(id).toStorage(),"id = "+ Integer.toString(id),null);
     }
 
     public void eliminarDato(int id){
 
 
     }
+
+    public ArrayList<T> getDatos() {
+        return datos;
+    }
+
 
 }
