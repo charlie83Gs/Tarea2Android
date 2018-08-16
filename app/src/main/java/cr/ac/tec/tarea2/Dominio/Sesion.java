@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Sesion {
     private Usuario usuario = null;
     private SQLiteDatabase database;
+    private static int lastId = 0;
     private Evento eventoSeleccionado = null;
     Almacenamiento<Usuario> almacenamientoUsuario;
     Almacenamiento<Evento> almacenamientoEvento;
