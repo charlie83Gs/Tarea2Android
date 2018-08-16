@@ -75,10 +75,18 @@ public class Sesion {
 
     public ArrayList<Evento> getEventos(int userId){
         ArrayList<Evento> eventosFiltrados = new ArrayList<Evento>();
+        lastId = 0;
         for(Evento evento: almacenamientoEvento.getDatos()){
             if(evento.getIdUsuario() == userId){
                 eventosFiltrados.add(evento);            }
+            if(evento.getIdEvento() > lastId)  {
+                lastId = evento.getIdEvento();
+            }
         }
         return eventosFiltrados;
+    }
+
+    public int getLastId(){
+        return lastId;
     }
 }
