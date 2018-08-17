@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Sesion {
     private Usuario usuario = null;
     private SQLiteDatabase database;
+    private static int lastId = 0;
     private Evento eventoSeleccionado = null;
     Almacenamiento<Usuario> almacenamientoUsuario;
     Almacenamiento<Evento> almacenamientoEvento;
@@ -73,12 +74,47 @@ public class Sesion {
         return almacenamientoEvento.getDatos();
     }
 
-    public ArrayList<Evento> getEventos(int userId){
+    public ArrayList<Evento> getEventos(int userId) {
+        return getEventosAux(userId, null, null, null);
+    }
+    public ArrayList<Evento> getEventos(int userId, Date iniDate, Date finDate) {
+        return getEventosAux(userId, iniDate, finDate, null);
+    }
+    public ArrayList<Evento> getEventos(int userId, Date iniDate, Date finDate, string word) {
+        return getEventosAux(userId, iniDate, finDate, word);
+    }
+
+    public ArrayList<Evento> getEventosAux(int userId, Date iniDate, Date finDate, string word) {
         ArrayList<Evento> eventosFiltrados = new ArrayList<Evento>();
-        for(Evento evento: almacenamientoEvento.getDatos()){
-            if(evento.getIdUsuario() == userId){
-                eventosFiltrados.add(evento);            }
+        lastId = 0;
+        for (Evento evento : almacenamientoEvento.getDatos()) {
+            if (evento.getIdUsuario() == userId) {
+                if (iniDate != null && word != null) {
+                    if (evento.getFecha() > iniDate && evento.getFecha() < finDate && evento.getTitulo().contains(word)) {
+                        eventosFiltrados.add(evento);
+                    }
+                }
+                if (iniDate != null) {
+                    if (evento.getFecha() > iniDate && evento.getFecha() < finDate) {
+                        eventosFiltrados.add(evento);
+                    }
+                } else if (word != null) {
+                    if (evento.getTitulo().contains(word)) {
+                        eventosFiltrados.add(evento);
+                    }
+                } else {
+                    eventosFiltrados.add(evento);
+                }
+            }
+            if (evento.getIdEvento() > lastId)  {
+                lastId = evento.getIdEvento();
+            }
         }
+
         return eventosFiltrados;
+    }
+
+    public int getLastId(){
+        return lastId;
     }
 }

@@ -61,7 +61,7 @@ public class CrearEvento extends AppCompatActivity {
         Date nuevaFecha = new Date(year,month,day,hour,minute);
         Sesion sesion = Sesion.getSesion(getApplicationContext());
         if(sesion.getEventoSeleccionado()== null){
-            Evento nuevoEvento = new Evento(nuevaFecha,sTitulo,sDescripcion,sesion.getUsuario().getId(),sesion.getEventos().size());
+            Evento nuevoEvento = new Evento(nuevaFecha,sTitulo,sDescripcion,sesion.getUsuario().getId(),sesion.getLastId());
             sesion.addEvento(nuevoEvento);
             finish();
         }else{
