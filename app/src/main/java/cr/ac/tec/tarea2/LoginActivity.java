@@ -48,5 +48,10 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    public void nuevoUsuario(View view){
+        Intent newActivityListaEventos = new Intent(view.getContext(), CrearUsuario.class);
+        startActivity(newActivityListaEventos);
+    }
+
 
 }
