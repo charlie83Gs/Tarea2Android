@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Tarea2</string>
+    <string name="Login">Entrar</string>
+    <string name="title_activity_crear_evento">CrearEvento</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
