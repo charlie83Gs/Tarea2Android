@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import cr.ac.tec.tarea2.Dominio.Sesion;
 import cr.ac.tec.tarea2.Dominio.Usuario;
 
 public class CrearUsuario extends AppCompatActivity {
@@ -35,8 +36,11 @@ public class CrearUsuario extends AppCompatActivity {
         String nomb = nombre.getText().toString();
         String alia = alias.getText().toString();
         String corr = correo.getText().toString();
+        Sesion sesion = Sesion.getSesion(getApplicationContext());
         if(pass.equals(passVerification)){
-            Usuario nuevoUsuario = new Usuario(nomb,alia,corr,pass,0);
+            Usuario nuevoUsuario = new Usuario(nomb,alia,corr,pass, sesion.getLastUserId()+1);
+            sesion.addUsuario(nuevoUsuario);
+            sesion.setLastIdUsuario(sesion.getLastUserId()+1);
             //guardar usuario en almacenamiento
             finish();
         }else{

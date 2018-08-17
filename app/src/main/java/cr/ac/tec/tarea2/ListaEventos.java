@@ -7,11 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +33,12 @@ public class ListaEventos extends ListActivity {
     private DialogFragment finalDate;
     private TextView txtInitialDate;
     private TextView txtFinalDate;
+    private CheckBox chkEliminar;
+    private EditText busqueda;
 
+    private Date dateInicial;
+    private Date dateFinal;
+    private String search;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +58,34 @@ public class ListaEventos extends ListActivity {
         finalDate = new DatePickerFragment();
         txtInitialDate = (TextView)findViewById(R.id.txv_ListaFechaInicial);
         txtFinalDate = (TextView)findViewById(R.id.txv_ListaFechaFinal);
+        chkEliminar = (CheckBox)findViewById(R.id.chk_ListaEventosEliminar);
+        busqueda =(EditText)findViewById(R.id.edt_ListaEventosBuscar);
+
+        //nulifica busquedas
+        dateFinal = dateInicial = null;
+        search = null;
+
+        //change listener para la busqueda
+        busqueda.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                updateEvents();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(s.toString().trim().length() > 0){
+                    search = s.toString();
+                }else{
+                    search = null;
+                }
+            }
+        });
+
     }
 
     @Override
@@ -62,15 +99,23 @@ public class ListaEventos extends ListActivity {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id){
        // Log.d("Lista eventos","clicked: " + position + " - "+ id);
-        ArrayList<Evento> eventos =  loadEventos();
-        Sesion.getSesion(getApplicationContext()).setEventoSeleccionado(eventos.get(position));
-        Intent newActivityCrearEvento = new Intent(getApplicationContext(), CrearEvento.class);
-        startActivity(newActivityCrearEvento);
+        ArrayList<Evento> eventos = loadEventos();
+        if(chkEliminar.isChecked()){
+            Sesion.getSesion(getApplicationContext()).deleteEvento(eventos.get(position));
+            eventos =  loadEventos();
+            AdapterEvento adapter = new AdapterEvento(this,R.layout.activity_lista_eventos,eventos);
+            setListAdapter(adapter);
+        }else {
+            Sesion.getSesion(getApplicationContext()).setEventoSeleccionado(eventos.get(position));
+            Intent newActivityCrearEvento = new Intent(getApplicationContext(), CrearEvento.class);
+            startActivity(newActivityCrearEvento);
+        }
     }
 
     //retorna una copia de la lista mas reciente de los eventos filtrada por id
     private ArrayList<Evento> loadEventos(){
-        return (ArrayList<Evento>)Sesion.getSesion(getApplicationContext()).getEventos(Sesion.getSesion(getApplicationContext()).getUsuario().getId()).clone();
+        Sesion sesion = Sesion.getSesion(getApplicationContext());
+        return (ArrayList<Evento>)sesion.getEventos(sesion.getUsuario().getId(),dateInicial,dateFinal,search).clone();
     }
 
     public void showTimePickerDialogInicio(View v) {
@@ -88,13 +133,21 @@ public class ListaEventos extends ListActivity {
         Calendar iniDate = ((DatePickerFragment)initialDate).getCalendar();
         Calendar finDate = ((DatePickerFragment)finalDate).getCalendar();
 
-        if(iniDate != null)
-        txtInitialDate.setText(calendarToText(iniDate));
-        if(finDate != null)
-        txtFinalDate.setText(calendarToText(finDate));
 
 
-        Log.d("Fecha inicial",iniDate.toString());
+        if(iniDate != null){
+            txtInitialDate.setText(calendarToText(iniDate));
+            dateInicial = iniDate.getTime();
+        }
+        if(finDate != null){
+            txtFinalDate.setText(calendarToText(finDate));
+            dateFinal = finDate.getTime();
+        }
+        ArrayList<Evento> eventos =  loadEventos();
+        AdapterEvento adapter = new AdapterEvento(this,R.layout.activity_lista_eventos,eventos);
+        setListAdapter(adapter);
+
+        //Log.d("Fecha inicial",iniDate.toString());
     }
 
 
@@ -179,6 +232,7 @@ public class ListaEventos extends ListActivity {
                 }
 
                 Date fechaEvento = lEvento.get(position).getFecha();
+                fechaEvento.toString();
                 String yearEvento = Integer.toString(fechaEvento.getYear());
                 String monthEvento = Integer.toString(fechaEvento.getMonth());
                 String dayEvento = Integer.toString(fechaEvento.getDay());
@@ -186,7 +240,7 @@ public class ListaEventos extends ListActivity {
                 String minuteEvento = Integer.toString(fechaEvento.getMinutes());
 
                 holder.display_name.setText(lEvento.get(position).getTitulo());
-                holder.display_date.setText(dayEvento+"/"+monthEvento+"/"+yearEvento +"--"+hourEvento+":"+minuteEvento);
+                holder.display_date.setText( fechaEvento.toString());
                 holder.display_number.setText(lEvento.get(position).getDescripcion());
 
 

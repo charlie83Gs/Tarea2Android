@@ -84,4 +84,9 @@ public class Usuario implements Almacenable{
         id = datos.getInt(4);
 
     }
+
+    @Override
+    public Object clone() {
+        return new Usuario( Nombre,  Alias,  Correo,  Password,  id);
+    }
 }

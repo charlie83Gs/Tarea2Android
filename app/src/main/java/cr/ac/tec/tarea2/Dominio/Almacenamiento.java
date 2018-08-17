@@ -71,12 +71,16 @@ public class Almacenamiento<T extends Almacenable> {
 
     }
 
-    public void updateElement(int id){
-        actualDB.update(tableName,datos.get(id).toStorage(),"id = "+ Integer.toString(id),null);
+    public void updateElement(int id,T dato){
+        actualDB.update(tableName,dato.toStorage(),"id = "+ Integer.toString(id),null);
+        //guardarDatos();
+
+
     }
 
-    public void eliminarDato(int id){
-        actualDB.delete(tableName,datos.get(id).toStorage(),"id = "+ Integer.toString(id),null);
+    public void eliminarDato(int id, T dato){
+        actualDB.delete(tableName,"id = "+ Integer.toString(id),null);
+        datos.remove(dato);
     }
 
     public ArrayList<T> getDatos() {

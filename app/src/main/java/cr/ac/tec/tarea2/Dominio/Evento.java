@@ -89,4 +89,9 @@ public class Evento implements Almacenable{
         idUsuario = datos.getInt(3);
         id = datos.getInt(4);
     }
+
+    @Override
+    public Object clone() {
+        return new Evento( fecha,  titulo,  descripcion,  idUsuario,  id);
+    }
 }
