@@ -7,6 +7,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -48,6 +49,7 @@ public class CrearEvento extends AppCompatActivity {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void crearActualizar(View view){
         String sTitulo = titulo.getText().toString();
@@ -58,10 +60,22 @@ public class CrearEvento extends AppCompatActivity {
         int day = dpFechaEvento.getDayOfMonth();
         int hour = tpFechaEvento.getHour();
         int minute = tpFechaEvento.getMinute();
-        Date nuevaFecha = new Date(year,month,day,hour,minute);
+        Log.d("fe","ff" + Integer.toString(day));
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date nuevaFecha = cal.getTime();
+
         Sesion sesion = Sesion.getSesion(getApplicationContext());
         if(sesion.getEventoSeleccionado()== null){
             Evento nuevoEvento = new Evento(nuevaFecha,sTitulo,sDescripcion,sesion.getUsuario().getId(),sesion.getLastId());
+            sesion.setLastId(sesion.getLastId() + 1);
             sesion.addEvento(nuevoEvento);
             finish();
         }else{
@@ -73,7 +87,7 @@ public class CrearEvento extends AppCompatActivity {
 
 
             //se guardan en la base de datos
-            sesion.updateEvento(antiguoEvento.getIdEvento());
+            sesion.updateEvento(antiguoEvento);
             finish();
         }
 

@@ -34,16 +34,23 @@ public class LoginActivity extends AppCompatActivity {
     public void login(View view){
         String name = username.getText().toString();
         String pass = password.getText().toString();
-        Toast.makeText(getApplicationContext(), "Entrando",Toast.LENGTH_SHORT).show();
         Sesion.getSesion(getApplicationContext()).validateUser();
+        Sesion sesion = Sesion.getSesion(getApplicationContext());
         if(name.equals("admin") && pass.equals("admin")){
             Usuario admin = new Usuario("admin","admin","admin","admin",-1);
-            Sesion.getSesion(getApplicationContext()).setUsuario(admin);
+            sesion.setUsuario(admin);
             Intent newActivityListaEventos = new Intent(view.getContext(), ListaEventos.class);
             startActivity(newActivityListaEventos);
         }else{
+            Usuario usuarioActual = sesion.getUsuarioByAlias(name);
+            if(usuarioActual != null && usuarioActual.validatePassword(pass)){
+                sesion.setUsuario(usuarioActual);
+                Intent newActivityListaEventos = new Intent(view.getContext(), ListaEventos.class);
+                startActivity(newActivityListaEventos);
+            }else{
             //Sesion.getSesion().validateUser();
             Toast.makeText(getApplicationContext(), "Usuario y contraseña incorrecta",Toast.LENGTH_SHORT).show();
+        }
         }
 
     }

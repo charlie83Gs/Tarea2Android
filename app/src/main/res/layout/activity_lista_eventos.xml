@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="329dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txv_ListaFechaInicial" />
+        app:layout_constraintTop_toBottomOf="@+id/chk_ListaEventosEliminar" />
 
     <TextView
         android:id="@+id/titleListaEventos"
@@ -89,4 +89,25 @@
         android:onClick="newEvento"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <CheckBox
+        android:id="@+id/chk_ListaEventosEliminar"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="40dp"
+        android:text="Eliminar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_listaFechaInicial" />
+
+    <EditText
+        android:id="@+id/edt_ListaEventosBuscar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Buscar" />
 </android.support.constraint.ConstraintLayout>

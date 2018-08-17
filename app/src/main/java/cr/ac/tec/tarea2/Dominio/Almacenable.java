@@ -9,4 +9,5 @@ public interface Almacenable {
 
     public ContentValues toStorage();
     public void fromStorage(Cursor datos);
+    public Object clone();
 }
