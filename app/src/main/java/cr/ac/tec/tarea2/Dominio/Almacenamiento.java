@@ -76,8 +76,7 @@ public class Almacenamiento<T extends Almacenable> {
     }
 
     public void eliminarDato(int id){
-
-
+        actualDB.delete(tableName,datos.get(id).toStorage(),"id = "+ Integer.toString(id),null);
     }
 
     public ArrayList<T> getDatos() {
